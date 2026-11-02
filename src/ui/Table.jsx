@@ -1,3 +1,4 @@
+import { createContext, useContext } from "react";
 import styled from "styled-components";
 
 const StyledTable = styled.div`
@@ -11,7 +12,7 @@ const StyledTable = styled.div`
 
 const CommonRow = styled.header`
   display: grid;
-  grid-template-columns: ${(props) => props.columns};
+  grid-template-columns: ${(props) => props.$columns};
   column-gap: 2.4rem;
   align-items: center;
   transition: none;
@@ -58,10 +59,44 @@ const Empty = styled.p`
   margin: 2.4rem;
 `;
 
-StyledTable.Header = StyledHeader;
-StyledTable.Body = StyledBody;
-StyledTable.Row = StyledRow;
-StyledTable.Footer = Footer;
-StyledTable.Empty = Empty;
+const TableContext = createContext();
 
-export default StyledTable;
+function Table({ children, columns }) {
+  return (
+    <TableContext.Provider value={columns}>
+      <StyledTable role="table">{children}</StyledTable>
+    </TableContext.Provider>
+  );
+}
+
+export default Table;
+
+function Row({ children }) {
+  const columns = useContext(TableContext);
+
+  return (
+    <StyledRow $columns={columns} role="row">
+      {children}
+    </StyledRow>
+  );
+}
+
+function Header({ children }) {
+  const columns = useContext(TableContext);
+  return (
+    <StyledHeader $columns={columns} role="row" as="header">
+      {children}
+    </StyledHeader>
+  );
+}
+
+function Body({ data, render }) {
+  if (!data || data.length === 0)
+    return <Empty>No data to show at the moment</Empty>;
+  return <StyledBody>{data.map(render)}</StyledBody>;
+}
+
+Table.Row = Row;
+Table.Header = Header;
+Table.Body = Body;
+Table.Footer = Footer;

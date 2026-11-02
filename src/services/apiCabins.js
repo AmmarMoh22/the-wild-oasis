@@ -20,7 +20,7 @@ export async function CreateEditCabin(newCabin, id) {
     : `${Math.random()}-${newCabin.image.name.replaceAll("/", "")}`;
   const imagePath = hasImage
     ? newCabin.image
-    : `${supabaseUrl}/storage/v1/object/public/cabins%20images/${imageName}`;
+    : `${supabaseUrl}/storage/v1/object/public/cabin-images/${imageName}`;
 
   let query = supabase.from("cabins");
 

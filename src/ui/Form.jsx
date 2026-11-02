@@ -23,3 +23,7 @@ const Form = styled.form`
 `;
 
 export default Form;
+
+Form.defaultProps = {
+  type: "regular",
+};
